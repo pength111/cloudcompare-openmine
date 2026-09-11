@@ -99,6 +99,22 @@ pip install -r requirements.txt
 - 脚本执行后会在 CloudCompare 数据库（DB Tree）中生成新的点云实体
 - 原始点云在处理后会被隐藏（`setEnabled(False)`），可在左侧目录树中重新显示
 
+## 配套仓库
+
+本工具集负责 OpenMine 露天矿点云处理流程中的**人工标注环节**（给点云赋 Label、
+提取缓冲区、生成示坡线）。自动化的主流程 —— 平台坡面分割、坡顶坡底线提取、
+示坡线自动生成 —— 跑在常规 Python 环境里，在另一个仓库：
+
+- [pength111/Open-pit](https://github.com/pength111/Open-pit)
+
+**为什么必须分成两个仓库：** 本仓库的脚本全部 `import pycc`，该模块只存在于
+CloudCompare 自带的 Python 解释器中，常规 Python 环境无法导入；反过来，主流程
+依赖 open3d / scipy / scikit-learn，也不在 CloudCompare 的内置环境里。两边的
+依赖和运行方式没有交集，因此各自独立成库、各自维护 `requirements.txt`。
+
+主流程在需要人工修剪的位置会停下来提示，此时回到本工具集操作，处理完再把结果
+交回主流程。
+
 ## License
 
 MIT License
